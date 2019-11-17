@@ -2,23 +2,22 @@ package com.uwantolearn.surviverxstream
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import androidx.lifecycle.ViewModelProviders
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
     private val disposable = CompositeDisposable()
 
+    private lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        Observable.interval(0, 1, TimeUnit.SECONDS)
-            .map(Long::toString)
-            .observeOn(AndroidSchedulers.mainThread())
+        viewModel.uiState()
             .subscribe(textView::setText)
             .let(disposable::add)
     }
@@ -28,3 +27,5 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 }
+
+
